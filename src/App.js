@@ -26,10 +26,9 @@ function Input({ register, name, ...rest }) {
   return <input {...register(name)} {...rest} />;
 }
 
-const Child = (props) => {
-  console.log('register', props)
+const Child = () => {
   return (
-    <Input name='email' register={props.register}/>
+    <Input name='email' />
   )
 }
 
