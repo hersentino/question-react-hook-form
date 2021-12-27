@@ -1,65 +1,45 @@
-import React from 'react'
-import {useForm, FormProvider} from 'react-hook-form'
-import {deepMap, hasComplexChildren} from "react-children-utilities"
-import './App.css';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { deepMap } from "react-children-utilities";
+import "./App.css";
 
-
-function Input({ register, name }) {
-  return <input ref={register(name)} />;
+function Input({ register, name, ...rest }) {
+  return <input {...register(name)} {...rest} />;
 }
 
-const Child = () => {
-  return (
-    <Input name='email' />
-  )
-}
-
-const test = (children, methods)=> deepMap(children, (child) => {
-  console.log("children", children)
-
-  if (hasComplexChildren(children) === true)
-  test(children, methods)
-
- return React.createElement(child.type, {
-     ...{
-       ...child.props,
-       register: methods.register,
-       key: child.props.name
-     }
-   })
-})
+const Child = () => <Input name="email" />;
 
 function Form({ defaultValues, children, onSubmit }) {
   const methods = useForm({ defaultValues });
   const { handleSubmit } = methods;
 
-
-  console.log("children1", children)
+  console.log("children1", children);
 
   return (
-    <FormProvider {...methods}>
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {test(children, methods)}
-    </form>
-    </FormProvider>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {deepMap(children, (child) => {
+          console.log("children", children);
+          return child.props.name? React.createElement(child.type, {
+            ...{
+              ...child.props,
+              register: methods.register,
+              key: child.props.name
+            }
+          })
+        : child;
+     })}
+      </form>
   );
 }
-
-
-
-
-
 
 function App() {
   return (
     <div className="App">
-      <Form onSubmit={e => console.log(e)}>
-        <div>
-          <Input />
-        </div>
-
+      <Form onSubmit={(e) => console.log(e)}>
+        <div><Input name="email1" /></div>
+        <Input name="email" />
         <Child />
-        <button type='submit'>submit</button>
+        <button type="submit">submit</button>
       </Form>
     </div>
   );
