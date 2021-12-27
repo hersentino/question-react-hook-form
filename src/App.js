@@ -7,7 +7,7 @@ function Input({ register, name, ...rest }) {
   return <input {...register(name)} {...rest} />;
 }
 
-const Child = () => <Input name="email" />;
+const Child = () => <Input name="email3" />;
 
 function Form({ defaultValues, children, onSubmit }) {
   const methods = useForm({ defaultValues });
@@ -36,9 +36,9 @@ function App() {
   return (
     <div className="App">
       <Form onSubmit={(e) => console.log(e)}>
-        <div><Input name="email1" /></div>
-        <Input name="email" />
-        <Child />
+        <div><Input name="email1" /></div>   {/* fonctionne */}
+        <Input name="email2" />               {/* fonctionne */}
+        <Child />                            {/* ne fonctionne pas */}
         <button type="submit">submit</button>
       </Form>
     </div>
